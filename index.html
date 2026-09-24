@@ -1,175 +1,515 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<!-- PWA 关键标签，iOS添加主屏幕独立运行 -->
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<!-- ========== 新增iPhone网页App独立模式配置 ========== -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="NZ行程">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23b8b0a8%22/><text x=%2250%22 y=%2265%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22white%22>🇳🇿</text></svg>">
-<title>新西兰每日行程</title>
+<meta name="apple-mobile-web-app-title" content="NZ行程规划">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23947c76%22/><text x=%2250%22 y=%2260%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22white%22>🗺️</text></svg>">
+<!-- ============================================= -->
+<title>🇳🇿新西兰行程</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;}
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
+}
+
 body{
-  background:#e8e2dd; /*莫兰迪浅灰米色*/
-  color:#4a4744;
-  overflow:hidden;
+    background:#e9e2dc;
+    min-height:100vh;
+    padding-bottom:145px;
+    color:#4a3f3a;
 }
-.wrap{
-  width:100vw;height:100vh;
-  overflow:hidden;
-  position:relative;
+
+.swiper{
+    width:100%;
+    height:calc(100vh - 130px);
 }
-.slide-container{
-  display:flex;height:100%;
-  transition:transform 0.3s ease-out;
+
+.swiper-slide{
+    overflow-y:auto;
+    padding:16px;
 }
+
 .day-card{
-  flex:0 0 100vw;
-  padding:24px;
-  overflow-y:auto;
-  height:100vh;
+    background:#f7f3ee;
+    border-radius:26px;
+    padding:20px 16px 24px;
+    min-height:94vh;
+    box-shadow:0 6px 18px rgba(74,63,58,0.08);
 }
-/* 超大日期星期，最醒目 */
-.day-header{
-  margin-bottom:20px;
+
+/* ==========【超大醒目日期星期】========== */
+.big-date{
+    font-size:clamp(36px,9vw,52px);
+    font-weight:800;
+    color:#5c4b44;
+    line-height:1.1;
+    letter-spacing:1px;
+    margin-bottom:8px;
 }
-.day-date{
-  font-size:72px;
-  font-weight:700;
-  color:#5c5854;
-  line-height:1;
+.big-week{
+    font-size:clamp(22px,5vw,30px);
+    font-weight:600;
+    color:#806e66;
+    margin-bottom:16px;
 }
-.day-week{
-  font-size:32px;
-  color:#78736f;
-  margin-top:4px;
+.top-title{
+    font-size:24px;
+    font-weight:700;
+    color:#3e3430;
+    line-height:1.35;
+    margin-bottom:22px;
 }
+
+/* 大信息块通用 */
 .block{
-  background:#f3efeb;
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:16px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    border-radius:22px;
+    padding:18px;
+    margin-bottom:14px;
 }
-.block h3{
-  font-size:24px;
-  color:#645f5b;
-  margin-bottom:8px;
+
+.block-title{
+    font-size:13px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin-bottom:10px;
+    opacity:0.85;
 }
-.block p{font-size:17px;line-height:1.5;}
+
+.block-content{
+    font-size:16px;
+    line-height:1.65;
+    font-weight:500;
+}
+
+/* 天气块：雾蓝灰 */
+.weather-block{
+    background:#dfe6ed;
+    color:#374151;
+}
+.weather-block .block-title{
+    color:#6b7f94;
+}
+.weather-block .block-content{
+    font-size:17px;
+    font-weight:600;
+}
+
+/* 起床与出发 */
+.time-block{
+    background:#f3e8d2;
+    color:#6b583a;
+}
+.time-block .block-title{
+    color:#8b7355;
+}
+.time-main{
+    font-size:30px;
+    font-weight:800;
+}
+.time-sub{
+    font-size:15px;
+    margin-top:8px;
+    opacity:0.9;
+}
+
+/* 穿搭块：柔雾粉棕 */
+.outfit-block{
+    background:#e9d5d0;
+    color:#6b4f48;
+}
+.outfit-block .block-title{
+    color:#8c6b64;
+}
+.outfit-block .block-content{
+    font-size:24px;
+    font-weight:700;
+    line-height:1.45;
+}
+
+/* 住宿块：奶油米杏 */
+.accom-block{
+    background:#f2e4c8;
+    color:#7a6240;
+}
+.accom-block .block-title{
+    color:#947a52;
+}
+
+/* 餐饮块：鼠尾草绿 */
+.dining-block{
+    background:#dde6d5;
+    color:#4f6b44;
+}
+.dining-block .block-title{
+    color:#6e8f62;
+}
+
+/* 地点块：浅灰紫 */
+.place-block{
+    background:#e6e0ea;
+    color:#5e4c66;
+}
+.place-block .block-title{
+    color:#7d6685;
+}
+.place-links{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
 .map-link{
-  color:#6b8a8b;
-  text-decoration:none;
+    color:#6b4f8a;
+    text-decoration:none;
+    font-size:15px;
+    font-weight:500;
 }
-.map-link:active{opacity:0.7;}
-.expense-input{
-  width:100%;
-  margin-top:8px;
-  padding:10px 12px;
-  border:1px solid #d9d2cd;
-  border-radius:12px;
-  background:#fff;
-  font-size:16px;
+.map-link span{
+    text-decoration:underline;
+}
+
+/* 备注块：浅灰 */
+.note-block{
+    background:#ebe7e2;
+    color:#5a4f49;
+}
+.note-block .block-title{
+    color:#7a6d65;
+}
+
+/* 按钮 */
+.weather-btn{
+    display:inline-block;
+    margin-top:12px;
+    padding:12px 18px;
+    border-radius:14px;
+    background:#b8c8d8;
+    color:#2f3b48;
+    text-decoration:none;
+    font-size:15px;
+    font-weight:600;
+}
+
+/* 分页圆点 */
+.swiper-pagination-bullet-active{
+    background:#947c76 !important;
+}
+
+/* 底部记账 */
+.spend-box{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#f7f3ee;
+    padding:12px 14px;
+    border-top:1px solid #d9cfc6;
+    z-index:10;
+}
+.spend-title{
+    font-size:15px;
+    font-weight:700;
+    color:#4a3f3a;
+    margin-bottom:8px;
+}
+.spend-row{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:8px;
+}
+input{
+    border:1px solid #c9b9b4;
+    border-radius:10px;
+    padding:8px 10px;
+    font-size:14px;
+    background:#fff;
+    color:#4a3f3a;
+}
+.btn-add{
+    background:#947c76;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:8px 12px;
+    font-size:14px;
+    font-weight:600;
+}
+.btn-del{
+    background:#a87c74;
+    color:white;
+    border:none;
+    border-radius:6px;
+    padding:3px 6px;
+    font-size:12px;
+}
+.spend-item{
+    display:flex;
+    gap:6px;
+    align-items:center;
+    font-size:13px;
+    color:#665854;
+    margin:3px 0;
+}
+.total{
+    font-size:14px;
+    font-weight:700;
+    color:#4a3f3a;
 }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="slide-container" id="slideWrap">
-    <!-- =========在这里修改你的每日行程，示例2天模板======== -->
-    <div class="day-card">
-      <div class="day-header">
-        <div class="day-date">09/23</div>
-        <div class="day-week">星期三</div>
-      </div>
-      <div class="block">
-        <h3>⏰ 起床时间：07:00</h3>
-        <p>洗漱收拾，早餐</p >
-      </div>
-      <div class="block">
-        <h3>🌤️ 天气情况</h3>
-        <p><a href=" " style="color:#6b8a8b">打开苹果自带天气查看</a ></p >
-      </div>
-      <div class="block">
-        <h3>👕 当日穿搭</h3>
-        <p>薄外套+长袖，防风</p >
-      </div>
-      <div class="block">
-        <h3>📍核心行程</h3>
-        <p>奥克兰市区游览<br/>
-        <a class="map-link" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Auckland">👉谷歌地图打开奥克兰</a ></p >
-      </div>
-      <div class="block">
-        <h3>💰实际花费记录</h3>
-        <input class="expense-input" placeholder="输入今日花费">
-      </div>
-    </div>
 
-    <div class="day-card">
-      <div class="day-header">
-        <div class="day-date">09/24</div>
-        <div class="day-week">星期四</div>
-      </div>
-      <div class="block">
-        <h3>⏰ 起床时间：06:30</h3>
-        <p>打包行李，出发前往罗托鲁瓦</p >
-      </div>
-      <div class="block">
-        <h3>🌤️ 天气情况</h3>
-        <p><a href="weather://" style="color:#6b8a8b">打开苹果自带天气查看</a ></p >
-      </div>
-      <div class="block">
-        <h3>👕 当日穿搭</h3>
-        <p>冲锋衣，长裤</p >
-      </div>
-      <div class="block">
-        <h3>📍核心行程</h3>
-        <p>罗托鲁瓦地热公园<br/>
-        <a class="map-link" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Rotorua">👉谷歌地图打开罗托鲁瓦</a ></p >
-      </div>
-      <div class="block">
-        <h3>💰实际花费记录</h3>
-        <input class="expense-input" placeholder="输入今日花费">
-      </div>
-    </div>
-    <!-- 继续复制 day-card 块增加更多天数 -->
+<div class="swiper" id="tripSwiper">
+  <div class="swiper-wrapper" id="swiperWrapper">
   </div>
+  <div class="swiper-pagination"></div>
+</div>
+
+<div class="spend-box">
+    <div class="spend-title">💰花费记账 · NZD · 本地保存</div>
+    <div class="spend-row">
+        <input id="spendDate" placeholder="日期 2026-09-24" style="width:130px;">
+        <input id="spendVal" placeholder="金额" type="number" style="width:80px;">
+        <input id="spendMemo" placeholder="备注" style="flex:1;min-width:90px;">
+        <button class="btn-add" id="btnAddSpend">新增</button>
+    </div>
+    <div id="spendList"></div>
+    <div class="total">合计：<span id="totalSpend">0.00</span> NZD</div>
 </div>
 
 <script>
-// 滑动逻辑
-const wrap = document.getElementById('slideWrap');
-const cards = document.querySelectorAll('.day-card');
-let current = 0;
-let startX = 0;
-let moving = false;
+const tripData = [
+{
+date:"2026-09-24",week:"周四",title:"南京出发飞往奥克兰",
+wake:"03:30",depart:"17:05",accommodation:"飞机上",
+dining:"",outfit:"",
+note:"南京出发转机两次；女生B：15:25上海浦东T2起飞",
+mapPlaces:["Nanjing Airport","Auckland Airport"]
+},
+{
+date:"2026-09-25",week:"周五",title:"抵达奥克兰",
+wake:"07:00",depart:"",accommodation:"KIKO亲戚家",
+dining:"",outfit:"",
+note:"20:35女生A抵达奥克兰；22:50女生B抵达奥克兰，亲戚接机",
+mapPlaces:["Auckland"]
+},
+{
+date:"2026-09-26",week:"周六",title:"科罗曼德尔 / Piha黑沙滩",
+wake:"07:30",depart:"09:00",accommodation:"KIKO亲戚家",
+dining:"午餐 Piha Café｜晚餐 Depot Eatery",
+outfit:"风衣 + 靴子 + 彩色内搭",
+note:"可选①科罗曼德尔半岛一日；②罗托鲁瓦一日；半天Piha皮哈海滩黑沙滩狮子岩",
+mapPlaces:["Piha Beach","Coromandel Peninsula","Rotorua"]
+},
+{
+date:"2026-09-27",week:"周日",title:"霍比特村一日大巴团",
+wake:"06:30",depart:"07:45 SkyCity Coach Terminal集合",accommodation:"KIKO亲戚家",
+dining:"午餐 夏尔咖啡厅｜晚餐 The Occidental Belgian Beer Cafe（青口锅）",
+outfit:"白色裙子 + 风衣",
+note:"GreatSights/InterCity霍比特一日游，199NZD/人，提前1‑2周预定，含绿龙酒馆饮料",
+mapPlaces:["Hobbiton Movie Set Matamata","SkyCity Coach Terminal Auckland"]
+},
+{
+date:"2026-09-28",week:"周一",title:"奥克兰飞基督城，基督城城市游览",
+wake:"05:45",depart:"07:15 JQ227 奥克兰→基督城",accommodation:"Hotel Give 基督城",
+dining:"午餐 Dimitris Greek Food / Fiddlesticks｜晚餐 Twenty Seven Step / Amazonita海鲜意面",
+outfit:"风衣 + 靴子 + 棕色短裙 + 黄绿上衣",
+note:"植物园，雅芳河泛舟40NZD，坎特伯雷博物馆，纸板教堂，集装箱市场；夜晚避开基督城东区",
+mapPlaces:["Christchurch Botanic Gardens","Avon River Christchurch","Cardboard Cathedral Christchurch"]
+},
+{
+date:"2026-09-29",week:"周二",title:"基督城 → 特卡波湖 Tekapo",
+wake:"07:30",depart:"08:30集合出发，车程约3小时",accommodation:"Grand Suites Lake Tekapo",
+dining:"午餐 Kohan Restaurant｜晚餐 MacKenzie’s Steak House",
+outfit:"风衣 + 靴子 + 蓝色短裙 + 灰色短袖",
+note:"好牧羊人教堂；可选约翰山天文台（上山8纽币）/蒂卡普温泉30纽币；晚上变色龙观星，步行15‑18分钟到接送点",
+mapPlaces:["Lake Tekapo","Church of the Good Shepherd Tekapo","Mount John Observatory Tekapo"]
+},
+{
+date:"2026-09-30",week:"周三",title:"Tekapo‑普卡基湖‑库克山",
+wake:"07:00",depart:"08:00出发",accommodation:"The Hermitage Hotel Mt Cook",
+dining:"Mt Cook Alpine Salmon 三文鱼｜Alpine Restaurant 自助餐",
+outfit:"白色冲锋衣 + 白色运动裤",
+note:"普卡基牛奶蓝湖；胡克山谷步道往返约3小时；冰川直升机+雪降399NZD/人，提前3周预定",
+mapPlaces:["Lake Pukaki","Aoraki Mount Cook","Hooker Valley Track"]
+},
+{
+date:"2026-10-01",week:"周四",title:"库克山→瓦纳卡方向→皇后镇",
+wake:"08:30",depart:"10:00 checkout，小团出发",accommodation:"Voco IHG Queenstown",
+dining:"",
+outfit:"绿色短裙 + 棕色毛衣",
+note:"Lindis Pass、杰克逊果园、卡瓦劳吊桥；22:00‑23:00吉布斯酒庄参观+观星186NZD，提前3天预约；格林诺奇骑马提前一周预约",
+mapPlaces:["Lindis Pass","Queenstown","Kawarau Bridge","Gibbston Valley Winery"]
+},
+{
+date:"2026-10-02",week:"周五",title:"米尔福德峡湾全日游",
+wake:"05:45",depart:"07:00酒店门口集合大巴",accommodation:"Voco IHG Queenstown",
+dining:"团含午餐｜晚餐 Botswana Butchery / SODA，建议提前2‑4周订位",
+outfit:"风衣 + 牛仔裤",
+note:"RealNZ/Southern Discoveries团，提前3周订；游船；天气好可固定翼飞机回皇后镇，天气差改大巴",
+mapPlaces:["Milford Sound","Mirror Lake Fiordland"]
+},
+{
+date:"2026-10-03",week:"周六",title:"皇后镇跳伞/射击/鲨鱼艇，飞奥克兰",
+wake:"06:40",depart:"07:30跳伞；17:30 JQ298飞奥克兰",accommodation:"奥克兰返程",
+dining:"午餐 Fergburger网红汉堡",
+outfit:"机车外套 + 牛仔裤",
+note:"NZONE跳伞351NZD提前2周预定；射击；Hydro Attack鲨鱼艇；19:20抵达奥克兰",
+mapPlaces:["Queenstown NZONE Skydive","Fergburger Queenstown"]
+}
+];
 
-function renderSlide(){
-  wrap.style.transform = `translateX(-${current * 100}vw)`;
+const wrapper = document.getElementById('swiperWrapper');
+
+function buildMapUrl(queryStr){
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryStr)}`;
 }
 
-wrap.addEventListener('touchstart', e=>{
-  startX = e.touches[0].clientX;
-  moving = true;
+tripData.forEach(d=>{
+    const slide = document.createElement('div');
+    slide.className = 'swiper-slide';
+
+    let mapHtml = '';
+    d.mapPlaces.forEach(place=>{
+        mapHtml += `<a class="map-link" target="_blank" href=" ">📍 <span>${place}</span></a >`;
+    });
+
+    slide.innerHTML = `
+    <div class="day-card">
+        <div class="big-date">${d.date}</div>
+        <div class="big-week">${d.week}</div>
+        <div class="top-title">${d.title}</div>
+
+        <div class="block time-block">
+            <div class="block-title">起床 / 出发</div>
+            <div class="time-main">⏰ ${d.wake||'--'}</div>
+            <div class="time-sub">🚀 ${d.depart||'--'}</div>
+        </div>
+
+        <div class="block weather-block">
+            <div class="block-title">今日天气</div>
+            <div class="block-content">🌤️ 查看苹果自带天气预报</div>
+            <a class="weather-btn" href="weather://">打开天气 App</a >
+        </div>
+
+        <div class="block outfit-block">
+            <div class="block-title">今日穿搭</div>
+            <div class="block-content">${d.outfit||'无预设'}</div>
+        </div>
+
+        <div class="block place-block">
+            <div class="block-title">行程地点</div>
+            <div class="place-links">${mapHtml}</div>
+        </div>
+
+        <div class="block accom-block">
+            <div class="block-title">住宿安排</div>
+            <div class="block-content">🏨 ${d.accommodation||'无'}</div>
+        </div>
+
+        <div class="block dining-block">
+            <div class="block-title">餐饮推荐</div>
+            <div class="block-content">🍴 ${d.dining||'无'}</div>
+        </div>
+
+        <div class="block note-block">
+            <div class="block-title">备注提醒</div>
+            <div class="block-content">${d.note||''}</div>
+        </div>
+    </div>
+    `;
+    wrapper.appendChild(slide);
 });
-wrap.addEventListener('touchmove', e=>{
-  if(!moving) return;
-  const dx = e.touches[0].clientX - startX;
-  wrap.style.transform = `translateX(calc(-${current*100}vw + ${dx}px))`;
+
+let mySwiper = null;
+
+document.addEventListener('DOMContentLoaded',()=>{
+    mySwiper = new Swiper('#tripSwiper',{
+        direction:'horizontal',
+        pagination:{el:'.swiper-pagination',clickable:true},
+        touchRatio:1.2,
+    });
+
+    const now = new Date();
+    let targetIndex = 0;
+    tripData.forEach((d,idx)=>{
+        const dt = new Date(d.date);
+        if(dt.getFullYear() === now.getFullYear() && dt.getMonth() === now.getMonth() && dt.getDate() === now.getDate()){
+            targetIndex = idx;
+        }
+    });
+    mySwiper.slideTo(targetIndex,0);
+
+    const spendDateInput = document.getElementById('spendDate');
+    const spendValInput = document.getElementById('spendVal');
+    const spendMemoInput = document.getElementById('spendMemo');
+    const spendListEl = document.getElementById('spendList');
+    const totalSpendEl = document.getElementById('totalSpend');
+    const btnAdd = document.getElementById('btnAddSpend');
+
+    function getSpends(){
+        const raw = localStorage.getItem('nz‑trip‑spends');
+        return raw ? JSON.parse(raw) : [];
+    }
+
+    function saveSpends(arr){
+        localStorage.setItem('nz‑trip‑spends', JSON.stringify(arr));
+    }
+
+    function renderSpend(){
+        spendListEl.innerHTML = '';
+        const arr = getSpends();
+        let sum = 0;
+        arr.forEach(i=> sum += Number(i.val));
+        totalSpendEl.innerText = sum.toFixed(2);
+
+        arr.forEach(it=>{
+            const div = document.createElement('div');
+            div.className = 'spend-item';
+            div.innerHTML = `<span>[${it.date}] ${it.val} NZD ${it.memo||''}</span>
+            <button class="btn-del">删除</button>`;
+            div.querySelector('button').addEventListener('click',()=>{
+                let list = getSpends();
+                list = list.filter(x=>x.id !== it.id);
+                saveSpends(list);
+                renderSpend();
+            });
+            spendListEl.appendChild(div);
+        });
+    }
+
+    btnAdd.addEventListener('click',()=>{
+        const d = spendDateInput.value.trim();
+        const v = parseFloat(spendValInput.value);
+        const m = spendMemoInput.value.trim();
+
+        if(!d || isNaN(v)){
+            alert('请填写日期和金额');
+            return;
+        }
+
+        const arr = getSpends();
+        arr.push({date:d, val:v, memo:m, id:Date.now()});
+        saveSpends(arr);
+
+        spendDateInput.value = '';
+        spendValInput.value = '';
+        spendMemoInput.value = '';
+
+        renderSpend();
+    });
+
+    renderSpend();
 });
-wrap.addEventListener('touchend', e=>{
-  moving = false;
-  const endX = e.changedTouches[0].clientX;
-  const diff = endX - startX;
-  if(Math.abs(diff)>60){
-    if(diff>0 && current>0) current--;
-    if(diff<0 && current<cards.length-1) current++;
-  }
-  renderSlide();
-});
-renderSlide();
 </script>
 </body>
 </html>
