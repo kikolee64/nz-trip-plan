@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- PWA 关键标签，iOS添加主屏幕独立运行 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="NZ行程">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23b8b0a8%22/><text x=%2250%22 y=%2265%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22white%22>🇳🇿</text></svg>">
+<title>新西兰每日行程</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;}
+body{
+  background:#e8e2dd; /*莫兰迪浅灰米色*/
+  color:#4a4744;
+  overflow:hidden;
+}
+.wrap{
+  width:100vw;height:100vh;
+  overflow:hidden;
+  position:relative;
+}
+.slide-container{
+  display:flex;height:100%;
+  transition:transform 0.3s ease-out;
+}
+.day-card{
+  flex:0 0 100vw;
+  padding:24px;
+  overflow-y:auto;
+  height:100vh;
+}
+/* 超大日期星期，最醒目 */
+.day-header{
+  margin-bottom:20px;
+}
+.day-date{
+  font-size:72px;
+  font-weight:700;
+  color:#5c5854;
+  line-height:1;
+}
+.day-week{
+  font-size:32px;
+  color:#78736f;
+  margin-top:4px;
+}
+.block{
+  background:#f3efeb;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+.block h3{
+  font-size:24px;
+  color:#645f5b;
+  margin-bottom:8px;
+}
+.block p{font-size:17px;line-height:1.5;}
+.map-link{
+  color:#6b8a8b;
+  text-decoration:none;
+}
+.map-link:active{opacity:0.7;}
+.expense-input{
+  width:100%;
+  margin-top:8px;
+  padding:10px 12px;
+  border:1px solid #d9d2cd;
+  border-radius:12px;
+  background:#fff;
+  font-size:16px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="slide-container" id="slideWrap">
+    <!-- =========在这里修改你的每日行程，示例2天模板======== -->
+    <div class="day-card">
+      <div class="day-header">
+        <div class="day-date">09/23</div>
+        <div class="day-week">星期三</div>
+      </div>
+      <div class="block">
+        <h3>⏰ 起床时间：07:00</h3>
+        <p>洗漱收拾，早餐</p >
+      </div>
+      <div class="block">
+        <h3>🌤️ 天气情况</h3>
+        <p><a href=" " style="color:#6b8a8b">打开苹果自带天气查看</a ></p >
+      </div>
+      <div class="block">
+        <h3>👕 当日穿搭</h3>
+        <p>薄外套+长袖，防风</p >
+      </div>
+      <div class="block">
+        <h3>📍核心行程</h3>
+        <p>奥克兰市区游览<br/>
+        <a class="map-link" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Auckland">👉谷歌地图打开奥克兰</a ></p >
+      </div>
+      <div class="block">
+        <h3>💰实际花费记录</h3>
+        <input class="expense-input" placeholder="输入今日花费">
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div class="day-date">09/24</div>
+        <div class="day-week">星期四</div>
+      </div>
+      <div class="block">
+        <h3>⏰ 起床时间：06:30</h3>
+        <p>打包行李，出发前往罗托鲁瓦</p >
+      </div>
+      <div class="block">
+        <h3>🌤️ 天气情况</h3>
+        <p><a href="weather://" style="color:#6b8a8b">打开苹果自带天气查看</a ></p >
+      </div>
+      <div class="block">
+        <h3>👕 当日穿搭</h3>
+        <p>冲锋衣，长裤</p >
+      </div>
+      <div class="block">
+        <h3>📍核心行程</h3>
+        <p>罗托鲁瓦地热公园<br/>
+        <a class="map-link" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Rotorua">👉谷歌地图打开罗托鲁瓦</a ></p >
+      </div>
+      <div class="block">
+        <h3>💰实际花费记录</h3>
+        <input class="expense-input" placeholder="输入今日花费">
+      </div>
+    </div>
+    <!-- 继续复制 day-card 块增加更多天数 -->
+  </div>
+</div>
+
+<script>
+// 滑动逻辑
+const wrap = document.getElementById('slideWrap');
+const cards = document.querySelectorAll('.day-card');
+let current = 0;
+let startX = 0;
+let moving = false;
+
+function renderSlide(){
+  wrap.style.transform = `translateX(-${current * 100}vw)`;
+}
+
+wrap.addEventListener('touchstart', e=>{
+  startX = e.touches[0].clientX;
+  moving = true;
+});
+wrap.addEventListener('touchmove', e=>{
+  if(!moving) return;
+  const dx = e.touches[0].clientX - startX;
+  wrap.style.transform = `translateX(calc(-${current*100}vw + ${dx}px))`;
+});
+wrap.addEventListener('touchend', e=>{
+  moving = false;
+  const endX = e.changedTouches[0].clientX;
+  const diff = endX - startX;
+  if(Math.abs(diff)>60){
+    if(diff>0 && current>0) current--;
+    if(diff<0 && current<cards.length-1) current++;
+  }
+  renderSlide();
+});
+renderSlide();
+</script>
+</body>
+</html>
